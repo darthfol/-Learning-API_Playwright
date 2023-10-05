@@ -30,5 +30,9 @@ test.describe.parallel("API Trening",()=>{
         expect(responseBody.page).toBe(999)
         expect(responseBody.data.length).toBe(0)
     })
-   
+    test.only('Test API - Single user not found',async ({request}) => {
+        const response = await request.get(`${baseURL}/api/users/23`)
+        
+        expect(response.status()).toBe(404)
+    })
 })
