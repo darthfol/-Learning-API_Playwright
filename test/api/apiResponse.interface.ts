@@ -1,6 +1,6 @@
 export interface IUserAPIBody{
     data: IUserAPIBodyData,
-    support: IUserAPIBodySupport
+    support: IAPIBodySupport
    
 }
 
@@ -12,7 +12,15 @@ export interface IUserAPIBodyData{
     avatar: string
 }
 
-export interface IUserAPIBodySupport{
+export interface IAPIBodySupport{
     url: string,
     text: string
+}
+export interface IUserListAPI{
+    page: number,
+    per_page: number,
+    total: number,
+    total_pages: number,
+    data: IUserAPIBodyData[],
+    support: IAPIBodySupport
 }
