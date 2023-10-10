@@ -1,6 +1,6 @@
 import { test, expect} from "@playwright/test";
-import { IUserAPIBody, IUserListAPI } from "./apiResponse.interface";
-import { user_2_data, user_7_data } from "./user.fixtures";
+import { INewUser, IResource, IResourceAPI, IUserAPIBody, IUserListAPI } from "./apiResponse.interface";
+import { new_user, resource_2, user_2_data, user_7_data } from "./user.fixtures";
 
 test.describe.parallel("API Trening",()=>{
     const baseURL = 'https://reqres.in'
@@ -30,9 +30,35 @@ test.describe.parallel("API Trening",()=>{
         expect(responseBody.page).toBe(999)
         expect(responseBody.data.length).toBe(0)
     })
-    test.only('Test API - Single user not found',async ({request}) => {
+    test('Test API - Single user not found',async ({request}) => {
         const response = await request.get(`${baseURL}/api/users/23`)
         
         expect(response.status()).toBe(404)
+    })
+    test('Test API - Test single resource', async({request})=>{
+        const response = await request.get(`${baseURL}/api/unknown/2`)
+        const responseBody:IResourceAPI = JSON.parse(await response.text())
+        
+        expect(response.status()).toBe(200)
+        expect(responseBody.data).toEqual(resource_2)
+    })
+    test('Test API - Test resoure not found', async({request})=>{
+        const response = await request.get(`${baseURL}/api/unknown/23`)
+
+        expect(response.status()).toBe(404)
+    })
+
+    test('Test API - Test post create', async({request})=>{
+        const response = await request
+            .post(`${baseURL}/api/users`,{
+                data: new_user
+            })
+        const responseBody: INewUser = JSON.parse(await response.text())
+
+        expect(response.status()).toBe(201)
+        expect(responseBody.name).toEqual(new_user.name)
+        expect(responseBody.job).toEqual(new_user.job)
+        expect(parseInt(responseBody.id)).toBeGreaterThan(0)
+        expect(responseBody.createdAt).toBeTruthy()
     })
 })
