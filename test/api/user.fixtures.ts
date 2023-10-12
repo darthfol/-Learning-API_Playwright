@@ -1,4 +1,4 @@
-import { INewUser, IResource, IUser, IUserData } from "./apiResponse.interface"
+import { INewUser, IRegisterUser, IResource, IUser, IUserData } from "./apiResponse.interface"
 
 export const user_2_data :IUserData = {
     id: 2,
@@ -25,4 +25,17 @@ export const resource_2: IResource = {
 export const new_user: IUser = {
     name: "Andżej",
     job: "tank driver"
+}
+
+export const user2Update: IUser = {
+    name: "morpheus",
+    job: "zion resident"
+}
+
+export const registerNewUser: IRegisterUser = {
+    email: "eve.holt@reqres.in",
+    password: "pistol"
+}
+export const registerWrongNewUser: IRegisterUser = {
+    email: "sydney@fife"
 }

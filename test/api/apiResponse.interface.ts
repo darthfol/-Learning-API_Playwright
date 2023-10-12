@@ -49,3 +49,22 @@ export interface IUser{
     name: string,
     job: string
 }
+
+export interface IUpdateUser{
+    name: string,
+    job: string,
+    updatedAt: string
+}
+
+export interface IRegisterUser{
+    email: string,
+    password?: string
+}
+
+export interface IRegisterResponse{
+    id: number,
+    token: string
+}
+export interface IErrorResponse{
+    error: string    
+}

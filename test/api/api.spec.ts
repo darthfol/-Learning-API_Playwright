@@ -1,6 +1,7 @@
 import { test, expect} from "@playwright/test";
-import { INewUser, IResource, IResourceAPI, IUserAPIBody, IUserListAPI } from "./apiResponse.interface";
-import { new_user, resource_2, user_2_data, user_7_data } from "./user.fixtures";
+import { IErrorResponse, INewUser, IRegisterResponse, IResource, IResourceAPI, IUpdateUser, IUserAPIBody, IUserListAPI } from "./apiResponse.interface";
+import { new_user, registerNewUser, registerWrongNewUser, resource_2, user2Update, user_2_data, user_7_data } from "./user.fixtures";
+import { errorMsg } from "./variables.common";
 
 test.describe.parallel("API Trening",()=>{
     const baseURL = 'https://reqres.in'
@@ -61,4 +62,45 @@ test.describe.parallel("API Trening",()=>{
         expect(parseInt(responseBody.id)).toBeGreaterThan(0)
         expect(responseBody.createdAt).toBeTruthy()
     })
+    test('Test API - Test update(PUT)', async({request})=>{
+        const response = await request.put(`${baseURL}/api/user/2`,{
+            data: user2Update
+        })
+        const responseBody: IUpdateUser = JSON.parse(await response.text())
+
+        expect(response.status()).toBe(200)
+        expect(responseBody.name).toBe(user2Update.name)
+        expect(responseBody.job).toBe(user2Update.job)
+        expect(responseBody.updatedAt).toBeTruthy()
+
+    })
+    test('Test API - Test update(POST)', async({request})=>{
+        const response = await request.delete(`${baseURL}/api/users/2`)
+
+        expect(response.status()).toBe(204)
+    })
+
+    test('Test API - Register succesfuly', async({request})=>{
+        const response = await request.post(`${baseURL}/api/register`,{
+            data: registerNewUser
+        })
+        const responseBody: IRegisterResponse = JSON.parse(await response.text())
+        
+        expect(response.status()).toBe(200)
+        expect(responseBody.id).toBeGreaterThan(0)
+        expect(responseBody.token).toBeTruthy()
+    })
+
+    test('Test API - Register unsuccesfuly', async({request})=>{
+        const response = await request.post(`${baseURL}/api/register`,{
+            data: registerWrongNewUser
+        })
+        const responseBody: IErrorResponse = JSON.parse(await response.text())
+
+        expect(response.status()).toBe(400)
+        expect(responseBody.error).toBe(errorMsg.erMissingPwd)
+    })
+
+
+
 })
